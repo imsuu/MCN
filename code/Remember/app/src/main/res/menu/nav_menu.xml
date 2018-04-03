@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_notes"
+            android:icon="@drawable/ic_nav_notes"
+            android:title="笔记" />
+        <item
+            android:id="@+id/nav_todo_list"
+            android:icon="@drawable/ic_nav_todo_list"
+            android:title="待办事项" />
+        <item
+            android:id="@+id/nav_birth_memo"
+            android:icon="@drawable/ic_nav_birth_memo"
+            android:title="生日备忘" />
+        <item
+            android:id="@+id/nav_pwd_management"
+            android:icon="@drawable/ic_nav_pwd_management"
+            android:title="密码管理" />
+        <item
+            android:id="@+id/nav_private_notes"
+            android:icon="@drawable/ic_nav_private_notes"
+            android:title="隐私笔记" />
+        <item
+            android:id="@+id/nav_recycle_bin"
+            android:icon="@drawable/ic_nav_recycle_bin"
+            android:title="回收站" />
+    </group>
+
+    <item android:title="设置">
+        <menu>
+            <item
+                android:id="@+id/nav_per_info"
+                android:icon="@drawable/ic_nav_per_info"
+                android:title="个人信息" />
+            <item
+                android:id="@+id/nav_sys_setup"
+                android:icon="@drawable/ic_nav_sys_setup"
+                android:title="应用信息" />
+        </menu>
+    </item>
+</menu>
