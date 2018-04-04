@@ -1,7 +1,11 @@
 package com.example.xiang.remember.ui;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -14,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +26,19 @@ import com.example.xiang.remember.model.MyUser;
 import com.example.xiang.remember.model.main_list;
 import com.example.xiang.remember.R;
 import com.example.xiang.remember.adapter.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
@@ -43,17 +56,19 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView headView;
 
     private String username;
+    private CircleImageView userhead;
 
     private DrawerLayout mDrawerLayout;
+
+    private long curTimeMills;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toobar);
         setSupportActionBar(toolbar);
-//      bmob注册
-        Bmob.initialize(this, "bb54bce7bd52e042e7de4ce0df7d1ecb");
-
 
         init();
 
@@ -61,19 +76,41 @@ public class MainActivity extends AppCompatActivity {
 
     public void init(){
 
+        //获取当前用户
         MyUser userInfo = BmobUser.getCurrentUser(MyUser.class);
-        if(userInfo != null){
-            username = (String) userInfo.getObjectByKey("username");
-            showToast(username);
-            //userNmae.setText(username);
-            //headView.setImageURI(userInfo.getObjectByKey("headPortrait").toUri());
-        }
 
         mNvMenu = (NavigationView) findViewById(R.id.main_nav_view);
         // 获取HeaderView
         mHeaderView = mNvMenu.getHeaderView(0);
-        userNmae = (TextView) mHeaderView.findViewById(R.id.navUserName);
-        userNmae.setText(username);
+
+        //用户名，头像修改
+        if(userInfo != null){
+            username = (String) userInfo.getObjectByKey("username");
+            //showToast(username);
+            userNmae = (TextView) mHeaderView.findViewById(R.id.navUserName);
+            userNmae.setText(username);
+
+
+            BmobFile now_user_img = userInfo.getHeadPortrait();
+            String url = now_user_img.getFileUrl();
+            //Bitmap bmp = returnBitMap(url);
+            showToast(url);
+            headView = (CircleImageView) mHeaderView.findViewById(R.id.navImgUserHead);
+            //headView.setImageBitmap(bmp);
+        }
+        //侧边栏
+        //navView.setCheckedItem(R.id.nav_notes);//预先选定
+        mNvMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.out_login) {
+                    loginout();
+                }
+                mDrawerLayout.closeDrawers();
+                return true;
+            }
+        });
 
         //点击图标显示菜单
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -82,17 +119,6 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
-
-        //侧边栏 点击关闭
-        NavigationView navView = (NavigationView) findViewById(R.id.main_nav_view);
-        //navView.setCheckedItem(R.id.nav_notes);//预先选定
-        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                mDrawerLayout.closeDrawers();
-                return true;
-            }
-        });
 
 
         //创建列表ScaleInAnimationAdapterOvershootInLeftAnimator
@@ -106,6 +132,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(animationAdapter);
         recyclerView.setItemAnimator(new OvershootInLeftAnimator());
 
+    }
+
+    //退出用户
+    public void loginout(){
+        BmobUser.logOut();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -146,5 +180,49 @@ public class MainActivity extends AppCompatActivity {
         mainList.add(books_private_notes);
         main_list books_recycle_bin = new main_list("> > 回收站", "Let your life be filled with B 数"+"\n"+"不再落后或错过 让生活更有规划");
         mainList.add(books_recycle_bin);
+    }
+
+    //加载图片
+    public Bitmap getURLimage(String url) {
+        Bitmap bmp = null;
+        try {
+            URL myurl = new URL(url);
+            // 获得连接
+            HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
+            conn.setConnectTimeout(6000);//设置超时
+            conn.setDoInput(true);
+            conn.setUseCaches(false);//不缓存
+            conn.connect();
+            InputStream is = conn.getInputStream();//获得图片的数据流
+            bmp = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bmp;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            // 关闭程序
+            exitAPP();
+        }
+    }
+
+    /**
+     * 两秒内单击两下即可关闭APP
+     */
+    private void exitAPP() {
+
+        if (System.currentTimeMillis() - curTimeMills > 2000) {
+            Snackbar.make(mDrawerLayout, "再按一次退出程序", Snackbar.LENGTH_SHORT).show();
+            curTimeMills = System.currentTimeMillis();
+        } else {
+            finish();
+        }
+
     }
 }

@@ -54,68 +54,20 @@ public class mainlistAdapter extends RecyclerView.Adapter<mainlistAdapter.ViewHo
                 int position = holder.getAdapterPosition();
                 main_list memo = mMemoList.get(position);
 
-                //获取当前用户
-                MyUser userInfo = BmobUser.getCurrentUser(MyUser.class);
-                String username = (String) userInfo.getObjectByKey("username");
-
                 if (memo.getMemo_name().equals("> > 笔记")) {
-                    if(userInfo != null){
-                        // 允许用户使用应用
-                        Toast.makeText(v.getContext(),username,Toast.LENGTH_SHORT).show();
-                    }else{
-                        //缓存用户对象为空时， 可打开用户注册界面…
-                        Intent it = new Intent(v.getContext(), LoginActivity.class);
-                        v.getContext().startActivity(it);
-
-                        //v.getContext().startActivity();
-                    }
+                    Toast.makeText(v.getContext(),"aaa",Toast.LENGTH_SHORT).show();
                 } else if (memo.getMemo_name().equals("> > 待办事项")) {
-                    if(userInfo != null){
-                        // 允许用户使用应用
-                        Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
-                    }else{
-                        //缓存用户对象为空时， 可打开用户注册界面…
-                        Intent it = new Intent(v.getContext(), LoginActivity.class);
-                        v.getContext().startActivity(it);
-                    }
+                    Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
                 } else if (memo.getMemo_name().equals("> > 生日备忘")) {
-                    if(userInfo != null){
-                        // 允许用户使用应用
-                        Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
-                    }else{
-                        //缓存用户对象为空时， 可打开用户注册界面…
-                        Intent it = new Intent(v.getContext(), LoginActivity.class);
-                        v.getContext().startActivity(it);
-                    }
+                    Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
                 } else if (memo.getMemo_name().equals("> > 密码管理")) {
-                    if(userInfo != null){
-                        // 允许用户使用应用
-                        Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
-                    }else{
-                        //缓存用户对象为空时， 可打开用户注册界面…
-                        Intent it = new Intent(v.getContext(), LoginActivity.class);
-                        v.getContext().startActivity(it);
-                    }
+                    Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
                 }else if (memo.getMemo_name().equals("> > 隐私笔记")) {
-                    if(userInfo != null){
-                        // 允许用户使用应用
-                        Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
-                    }else{
-                        //缓存用户对象为空时， 可打开用户注册界面…
-                        Intent it = new Intent(v.getContext(), LoginActivity.class);
-                        v.getContext().startActivity(it);
-                    }
-                }else if (memo.getMemo_name().equals("> > 回收站")) {
-                    if(userInfo != null){
-                        // 允许用户使用应用
-                        Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
-                    }else{
-                        //缓存用户对象为空时， 可打开用户注册界面…
-                        Intent it = new Intent(v.getContext(), LoginActivity.class);
-                        v.getContext().startActivity(it);
-                    }
-                }
+                    Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
 
+                }else if (memo.getMemo_name().equals("> > 回收站")) {
+                    Toast.makeText(v.getContext(),"aaaa",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return holder;

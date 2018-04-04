@@ -37,6 +37,10 @@
                 android:id="@+id/nav_sys_setup"
                 android:icon="@drawable/ic_nav_sys_setup"
                 android:title="应用信息" />
+            <item
+                android:id="@+id/out_login"
+                android:icon="@mipmap/ic_out_login"
+                android:title="退出登录"/>
         </menu>
     </item>
 </menu>

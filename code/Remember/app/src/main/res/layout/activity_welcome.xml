@@ -7,7 +7,7 @@
     tools:context="com.example.xiang.remember.ui.WelcomeActivity">
 
     <ImageView
-        android:id="@+id/id_iv_splash"
+        android:id="@+id/iv_welcome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"

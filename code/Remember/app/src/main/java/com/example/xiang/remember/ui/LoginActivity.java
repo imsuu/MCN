@@ -47,9 +47,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgetPsw = (TextView) findViewById(R.id.forgetPsw);
         signIn = (Button) findViewById(R.id.signIn);
 
+
         // 点击事件
         signUp.setOnClickListener(this);
         signIn.setOnClickListener(this);
+        forgetPsw.setOnClickListener(this);
     }
 
     @Override
@@ -62,6 +64,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.signIn:
                 go_signin();
+                break;
+            case R.id.forgetPsw:
+                go_pwd();
+                break;
+            default:
+                showToast("未知错误");
                 break;
         }
     }
@@ -80,16 +88,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(user!=null){
                     Log.d("LoginActivity","success");
                     showToast("登陆成功");
-                    //finish();
                     Intent it = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(it);
                     overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                    finish();
                 }
                 else
                     showToast(e.toString());
             }
         });
 
+    }
+
+    public void go_pwd(){
+        useremailText=useremail.getText().toString();
+        //showToast(useremailText);
+        Intent it = new Intent(LoginActivity.this, ForgetPwdActivity.class);
+        it.putExtra("user_email",useremailText);
+        startActivity(it);
     }
 
     //Toast
@@ -107,6 +123,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // 把得到的数据显示到输入框内
             useremail.setText(name);
             userpassword.setText(pwd);
+            //showToast("aaaaaaaaaaaaa");
         }
     }
 }
